@@ -1,19 +1,23 @@
-const axios = require("axios");
-const UserServices = require("./userInfoService");
-const config = require("../config");
+const axios = require('axios')
+const UserServices = require('./userInfoService')
+const config = require('../config/index')
 
 function callback(req, res) {
   const body = {
     client_id: config.clientId,
     client_secret: config.clientSecret,
-    code: req.query.code,
-  };
-  const options = { headers: { accept: "application/json" } };
+    code: req.query.code
+  }
+  const options = {
+    headers: {
+      accept: 'application/json'
+    }
+  }
   axios
     .post(`${config.oauthUrl}/access_token`, body, options)
-    .then((res) => resp.data["accessToken"])
+    .then((res) => res.data['access_token'])
     .then((accessToken) => {
-      const user = UserServices.getUserInfo(accessToken);
+      const user = UserServices.getUserInfo(accessToken)
       res.json({
         data: {
           login: user.login,
@@ -21,13 +25,15 @@ function callback(req, res) {
           avatar: user.avatar_url,
           email: user.email,
           name: user.name,
-          location: user.location,
-        },
-      });
+          location: user.location
+        }
+      })
     })
-    .catch((err) => res.status(500).json({ message: err.message }));
+    .catch((err) => res.status(500).json({
+      message: err.message
+    }))
 }
 
 module.exports = {
-  callback: callback,
-};
+  callback: callback
+}
